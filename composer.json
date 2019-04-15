@@ -16,6 +16,13 @@
         "soapbox/laravel-formatter": "2.x"
     },
     "minimum-stability": "dev",
+    "extra" : {
+        "laravel" : {
+            "providers" : [
+                "Fortshpejt\\PCB\\PcbServiceProvider"
+            ]
+        }
+    },
     "autoload" : {
 
         "psr-4": {
