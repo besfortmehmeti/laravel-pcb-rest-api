@@ -2,7 +2,6 @@
 namespace Fortshpejt\PCB;
 
 use Fortshpejt\PCB\Traits\PcbRequest;
-use Fortshpejt\PCB\Requests\PcbOrderRequest;
 use Fortshpejt\PCB\Handlers\PcbOrderCallbackHandler;
 use SoapBox\Formatter\Formatter;
 use Illuminate\Http\Request;
