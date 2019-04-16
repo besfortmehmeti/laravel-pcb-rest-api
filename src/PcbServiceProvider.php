@@ -2,10 +2,24 @@
 
 namespace Fortshpejt\PCB;
 
+use Fortshpejt\PCB\Pcb;
+
 use Illuminate\Support\ServiceProvider;
 
 class PcbServiceProvider extends ServiceProvider
 {
+
+    /**
+     * Register services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->registerPcb();
+
+        $this->mergeConfig();
+    }
 
     /**
      * Bootstrap services.
@@ -20,18 +34,6 @@ class PcbServiceProvider extends ServiceProvider
         ]);
     }
 
-    /**
-     * Register services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->registerPcb();
-
-        $this->mergeConfig();
-    }
-
 
     /**
      * Register the application bindings.
@@ -40,12 +42,9 @@ class PcbServiceProvider extends ServiceProvider
      */
     private function registerPcb()
     {
-        /*$this->app->singleton('express_checkout', function () {
-            return new ExpressCheckout();
+        $this->app->singleton('pcb', function () {
+            return new Pcb();
         });
-        $this->app->singleton('adaptive_payments', function () {
-            return new AdaptivePayments();
-        });*/
     }
 
 
