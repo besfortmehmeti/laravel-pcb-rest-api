@@ -13,7 +13,7 @@ class PcbOrderCallbackHandler
 
 		$xmlmsg = base64_decode($request->input('xmlmsg'));
         
-        if (!$xmlmsg) return null;
+        if (!$xmlmsg || empty($xmlmsg)) return null;
 
 
         return Formatter::make($xmlmsg, Formatter::XML)->toArray();

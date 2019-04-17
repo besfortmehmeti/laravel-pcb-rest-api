@@ -22,35 +22,28 @@ trait PcbRequest
 	private $DeclineURL;
 
 
-
-
-	private function setConfig(array $config = [])
+	private function setConfig()
     {
-        // Set Api Credentials
+        // Set Config
+    	$envConfig = config('pcb');
 
-    	$config = config('pcb');
-
-    	//dd($config);
-
-        if (empty($config['mode']) || !in_array($config['mode'], ['sandbox', 'live'])) {
+        if (empty($envConfig['mode']) || !in_array($envConfig['mode'], ['sandbox', 'live'])) {
             $this->mode = 'live';
         } else {
-            $this->mode = $config['mode'];
+            $this->mode = $envConfig['mode'];
         }
 
+        $this->config = $envConfig[$this->mode];
 
-        $this->config = $config[$this->mode];
+        if(empty($this->config)) return null;
 
-
-        $this->sslKey = $this->config['ssl_key'];
-        $this->sslCA = $this->config['ssl_cainfo'];
-        $this->sslCert = $this->config['ssl_cert'];
+        $this->sslKey  = storage_path('cert/'.$this->config['ssl_key']);
+        $this->sslCA  = storage_path('cert/'.$this->config['ssl_cainfo']);
+        $this->sslCert  = storage_path('cert/'.$this->config['ssl_cert']);
         
-
-        $this->ApproveURL = route('transaction.handler', ['action' => 'accept']);
-        $this->CancelURL = route('transaction.handler', ['action' => 'cancel']);
-        $this->DeclineURL = route('transaction.handler', ['action' => 'decline']);
-
+        $this->ApproveURL = $envConfig['ApproveURL'];
+        $this->CancelURL  = $envConfig['CancelURL'];
+        $this->DeclineURL = $envConfig['DeclineURL'];
 
     }
 
@@ -64,11 +57,11 @@ trait PcbRequest
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $this->config['url']);
 
-		curl_setopt($ch, CURLOPT_SSLKEY, storage_path('cert/'.$this->sslKey) );
-		curl_setopt($ch, CURLOPT_CAINFO, storage_path('cert/'.$this->sslCA) );
-		curl_setopt($ch, CURLOPT_SSLCERT, storage_path('cert/'.$this->sslCert) );
+		curl_setopt($ch, CURLOPT_SSLKEY, $this->sslKey );
+		curl_setopt($ch, CURLOPT_CAINFO, $this->sslCA );
+		curl_setopt($ch, CURLOPT_SSLCERT, $this->sslCert );
 		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml")); //  multipart/form-data
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml"));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return results
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -85,6 +78,7 @@ trait PcbRequest
     	return Formatter::make($result, Formatter::XML)->toArray();
 
 	}
+
 
 
 	private function createOrder($array = [])
@@ -113,6 +107,8 @@ trait PcbRequest
 
 	}
 
+
+
 	private function getorderStatus($array = [])
 	{
 
@@ -133,7 +129,6 @@ trait PcbRequest
 		return $this->orderResponse($ex);
 
 	}
-
 
 
 

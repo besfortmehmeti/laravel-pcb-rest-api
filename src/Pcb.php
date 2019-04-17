@@ -6,6 +6,8 @@ use Fortshpejt\PCB\Handlers\PcbOrderCallbackHandler;
 use SoapBox\Formatter\Formatter;
 use Illuminate\Http\Request;
 
+use Cookie;
+
 
 class Pcb
 {
@@ -13,39 +15,18 @@ class Pcb
 	use PcbRequest;
 
 
-	public function __construct( array $config = [] )
+	public function __construct( )
 	{
 		
-		$this->setConfig($config);
+		$this->setConfig();
 	
 	}
 
 
-	public function index()
+	public function createOrderRequest($order_id, $amount, $description = '', $currency = null)
 	{
 
 		$data = [
-			'amount' => '15.5',
-			'currency' => 'EUR',
-			'description' => 'Test Order #00001',
-		];
-				
-		$response = $this->createOrder($data);
-
-
-		if($response['code'] == '00') {
-			//return redirect( $response['msg']);
-			return redirect( $response['msg']['URL'].'?ORDERID='.$response['msg']['OrderID'].'&SESSIONID='.$response['msg']['SessionID'] );
-		} else {		
-			throw new \Exception('ErrorCode: '.$response['code'].' - '.$response['msg'], 1);
-		}
-
-	}
-
-
-	public function createOrderRequest($order_id, $amount, $description = '', $currency = null)
-    {
-        $data = [
 			'amount' => $amount,
 			'description' => $description,
 		];
@@ -56,19 +37,19 @@ class Pcb
 		$response = $this->createOrder($data);
 
 		if($response['code'] == '00') {
-			return redirect( $response['msg']['URL'].'?ORDERID='.$response['msg']['OrderID'].'&SESSIONID='.$response['msg']['SessionID'] );
+
+			return $response;
+
 		} else {		
 			throw new \Exception('ErrorCode: '.$response['code'].' - '.$response['msg'], 1);
 		}
 
-    }
+	}
 
-	
-	
 
 	public function getOrderStatusRequest($OrderID, $SessionID)
-    {
-        $data = [
+	{
+		$data = [
 			'OrderID' => $OrderID,
 			'SessionID' => $SessionID,
 		];
@@ -77,8 +58,7 @@ class Pcb
 
 		dd($response);
 		
-    }
-
+	}
 	
 	
 	public function orderHandler(Request $request)
@@ -86,9 +66,9 @@ class Pcb
 
 		$handler = new PcbOrderCallbackHandler();
 
-		$orderStatusData = $handler->handle($request);
-		
-		dd( $orderStatusData );
+		return $handler->handle($request);
+
+	
 	}
 	
 	

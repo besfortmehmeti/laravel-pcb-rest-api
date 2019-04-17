@@ -19,6 +19,8 @@ composer require besfortmehmeti/laravel-pcb-rest-api
 
 **Usage examples:**
 
-See [samples](samples) folder
+use Fortshpejt\PCB\Facades\Pcb;
+
+Pcb::createOrderRequest($order_id, $amount, $description, $currency);
 
 ---
