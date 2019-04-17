@@ -6,9 +6,6 @@ use Fortshpejt\PCB\Handlers\PcbOrderCallbackHandler;
 use SoapBox\Formatter\Formatter;
 use Illuminate\Http\Request;
 
-use Cookie;
-
-
 class Pcb
 {
 
@@ -23,7 +20,7 @@ class Pcb
 	}
 
 
-	public function createOrderRequest($order_id, $amount, $description = '', $currency = null)
+	public function createOrderRequest($amount, $description = '', $currency = null)
 	{
 
 		$data = [

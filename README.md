@@ -22,7 +22,7 @@ composer require besfortmehmeti/laravel-pcb-rest-api
 ```
 use Fortshpejt\PCB\Facades\Pcb;
 
-Pcb::createOrderRequest($order_id, $amount, $description, $currency);
+$doPayment = Pcb::createOrderRequest($amount, $description, $currency);
 ```
 
 ---
